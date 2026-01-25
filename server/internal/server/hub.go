@@ -23,7 +23,7 @@ type ClientInterfacer interface {
 	SocketSendAs(message packets.Msg, senderId uint64)
 
 	//Forward message to another client for processing
-	PassToPeer(message packets.Msg, senderId uint64)
+	PassToPeer(message packets.Msg, peerId uint64)
 
 	//Forward message to all other clients
 	Broadcast(message packets.Msg)
