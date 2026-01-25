@@ -53,7 +53,7 @@ type Hub struct {
 }
 
 // Constructor for the Hub:
-func newHub() *Hub {
+func NewHub() *Hub {
 	return &Hub{
 		Clients:        make(map[uint64]ClientInterfacer),
 		BroadcastChan:  make(chan *packets.Packet),

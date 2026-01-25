@@ -1,35 +1,46 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"server/pkg/packets"
+	"log"
+	"net/http"
+	"server/internal/server"
+	"server/internal/server/clients"
+)
 
-	"google.golang.org/protobuf/proto"
+var (
+	port = flag.Int("port", 8000, "Port to listen on")
 )
 
 func main() {
-	/*packet := &packets.Packet{
-		SenderId: 69,
-		Msg:      packets.NewChat("Hello, world!"),
-	}
+	flag.Parse()
 
-	fmt.Println(packet)
+	// Defining the game hub
+	hub := server.NewHub()
 
-	data, err := proto.Marshal(packet)
+	// Defining handler for WebSocket connections
+	//Using "ws"(web socket) route, allowing full duplex communication
+	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		hub.Serve(clients.NewWebSocketClient, w, r)
+	})
+	//^Now whenever a new connection is and the client tries to access ws route, it will
+	//serve the new connection with the hub by creating a new websocket connection and start
+	//processing requests
 
+	//Now that the handler is defined, let's run (start) the hub using a go routine to make sure the hub
+	//can always run in the background
+	go hub.Run()
+
+	//Since the hub started, now we need to actually listen to the port
+	addr := fmt.Sprintf(":%d", *port) //default port 8080
+
+	log.Printf("Starting server on %s", addr)
+	err := http.ListenAndServe(addr, nil)
+
+	//In case of an error, print a fatal error message which will stop the server:
 	if err != nil {
-		panic(err)
+		log.Fatalf("Failed to start the server: %v", err)
 	}
 
-	fmt.Println(data)*/
-
-	data := []byte{8, 69, 18, 15, 10, 13, 72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33}
-
-	packet := &packets.Packet{}
-	err := proto.Unmarshal(data, packet)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(packet)
 }
