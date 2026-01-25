@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	port = flag.Int("port", 8000, "Port to listen on")
+	port = flag.Int("port", 8080, "Port to listen on")
 )
 
 func main() {
