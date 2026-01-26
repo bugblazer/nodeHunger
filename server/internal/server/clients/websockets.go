@@ -68,6 +68,8 @@ func (c *WebSocketClient) Initialize(id uint64) {
 
 // I'll figure out later how to process the message
 func (c *WebSocketClient) ProcessMessage(senderId uint64, message packets.Msg) {
+	c.logger.Printf("Recieved message from: %T from client. Echoing it back...", message)
+	c.SocketSend(message)
 }
 
 // Instead of repeating the logic, simply calling the SendSocketAs function here and will write the logic there
