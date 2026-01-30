@@ -90,7 +90,7 @@ func (c *WebSocketClient) SocketSendAs(message packets.Msg, senderId uint64) {
 
 // Checks if the peer is registered and then if it is, sends the message to peer
 func (c *WebSocketClient) PassToPeer(message packets.Msg, peerId uint64) {
-	if peer, exists := c.hub.Clients[peerId]; exists {
+	if peer, exists := c.hub.Clients.Get(peerId); exists {
 		peer.ProcessMessage(c.id, message)
 	}
 }

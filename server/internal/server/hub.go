@@ -3,6 +3,7 @@ package server
 import (
 	"log"
 	"net/http"
+	"server/internal/server/objects"
 	"server/pkg/packets"
 )
 
@@ -40,7 +41,7 @@ type ClientInterfacer interface {
 
 // The centerl communication b/w client and server:
 type Hub struct {
-	Clients map[uint64]ClientInterfacer
+	Clients *objects.SharedCollection[ClientInterfacer]
 
 	//The packets in this channel will be sent over to all connected clients
 	BroadcastChan chan *packets.Packet
@@ -55,7 +56,7 @@ type Hub struct {
 // Constructor for the Hub:
 func NewHub() *Hub {
 	return &Hub{
-		Clients:        make(map[uint64]ClientInterfacer),
+		Clients:        objects.NewSharedCollection[ClientInterfacer](),
 		BroadcastChan:  make(chan *packets.Packet),
 		RegisterChan:   make(chan ClientInterfacer),
 		UnregisterChan: make(chan ClientInterfacer),
@@ -76,24 +77,28 @@ func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.RegisterChan:
-			client.Initialize(uint64(len(h.Clients))) //setting the client ID to it's
+			client.Initialize(h.Clients.Add(client)) //setting the client ID to it's
 			//index number in the map (for now)
 
 		case client := <-h.UnregisterChan:
-			h.Clients[client.Id()] = nil //Not deleting the client to maintain
-			//proper numbering(0-n), instead setting
-			//it to nil
+			h.Clients.Remove(client.Id())
 
 		case packet := <-h.BroadcastChan:
-			for id, client := range h.Clients {
-				if id != packet.SenderId {
-					client.ProcessMessage(packet.SenderId, packet.Msg)
-				}
-			}
+			// for id, client := range h.Clients {
+			// 	if id != packet.SenderId {
+			// 		client.ProcessMessage(packet.SenderId, packet.Msg)
+			// 	}
+			// }
 			//This last case takes any packet sent to the broadcast channel, then it
 			//loops through each client in our map (named Clients)
 			//As long as the client ID is not same as the packet sender ID
 			//the message is processed by the client
+			//^Instead of the for in range loop, using a for each loop now after making the sharedCollection
+			h.Clients.ForEach(func(clientId uint64, client ClientInterfacer) {
+				if clientId != packet.SenderId {
+					client.ProcessMessage(packet.SenderId, packet.Msg)
+				}
+			})
 
 		}
 	}
