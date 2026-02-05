@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"server/internal/server"
+	"server/internal/server/states"
 	"server/pkg/packets"
 
 	"github.com/gorilla/websocket"
@@ -18,6 +19,7 @@ type WebSocketClient struct {
 	conn     *websocket.Conn
 	hub      *server.Hub
 	sendChan chan *packets.Packet
+	state    server.ClientStateHandler
 	logger   *log.Logger
 }
 
@@ -64,20 +66,36 @@ func (c *WebSocketClient) Id() uint64 {
 func (c *WebSocketClient) Initialize(id uint64) {
 	c.id = id
 	c.logger.SetPrefix(fmt.Sprintf("Client %d: ", c.id))
-	c.SocketSend(packets.NewId(c.id))
-	c.logger.Printf("ID sent to client")
+	c.SetState(&states.Connected{})
+}
+
+// Function to update the states and log state chnages
+func (c *WebSocketClient) SetState(state server.ClientStateHandler) {
+	prevStateName := "None"
+	if c.state != nil {
+		prevStateName = c.state.Name()
+		c.state.OnExit()
+	}
+
+	newStateName := "None"
+	if state != nil {
+		newStateName = state.Name()
+	}
+
+	c.logger.Printf("Switching from state %s to %s", prevStateName, newStateName)
+
+	c.state = state
+
+	if c.state != nil {
+		c.state.SetClient(c)
+		c.state.OnEnter()
+	}
 }
 
 // I'll figure out later how to process the message
 // And I did :D (1/31/26)
 func (c *WebSocketClient) ProcessMessage(senderId uint64, message packets.Msg) {
-	if senderId == c.id {
-		//means the message was sent from our own client, so just broadcast it to others
-		c.Broadcast(message)
-	} else {
-		//Another client sent it or got it from the hub, then forward to client
-		c.SocketSendAs(message, senderId)
-	}
+	c.state.HandleMessage(senderId, message)
 }
 
 // Instead of repeating the logic, simply calling the SendSocketAs function here and will write the logic there
@@ -195,6 +213,8 @@ func (c *WebSocketClient) WritePump() {
 // Closing function
 func (c *WebSocketClient) Close(reason string) {
 	c.logger.Printf("Closing client connection because: %s", reason)
+
+	c.SetState(nil)
 
 	c.hub.UnregisterChan <- c
 	c.conn.Close()
