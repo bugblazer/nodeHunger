@@ -1,25 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://c8gs4ledvyyor"]
+[gd_scene load_steps=2 format=3 uid="uid://c8gs4ledvyyor"]
 
 [ext_resource type="Script" uid="uid://cwo70dsgen0sh" path="res://main.gd" id="1_ig7tw"]
-[ext_resource type="Script" uid="uid://8qda8samenj8" path="res://classes/log/log.gd" id="2_0xm2m"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_ig7tw")
-
-[node name="Log" type="RichTextLabel" parent="."]
-layout_mode = 0
-offset_left = 2.0
-offset_top = 482.0
-offset_right = 1153.0
-offset_bottom = 600.0
-script = ExtResource("2_0xm2m")
-metadata/_custom_type_script = "uid://8qda8samenj8"
-
-[node name="LineEdit" type="LineEdit" parent="."]
-layout_mode = 0
-offset_left = 7.0
-offset_top = 611.0
-offset_right = 1156.0
-offset_bottom = 642.0
