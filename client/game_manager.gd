@@ -3,12 +3,14 @@ extends Node
 #A list of states:
 enum State {
 	ENTERED, #Connecting to the server etc
+	CONNECTED, #Login/register state
 	INGAME, #In-game logic, chat etc
 }
 
 #Creating a dictionary that will hold scenes related to different states
 var _states_scenes: Dictionary[State, String] = {
 	State.ENTERED: "res://states/entered/entered.tscn",
+	State.CONNECTED: "res://states/connected/connected.tscn",
 	State.INGAME: "res://states/ingame/ingame.tscn",
 }
 

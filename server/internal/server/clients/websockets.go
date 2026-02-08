@@ -21,6 +21,7 @@ type WebSocketClient struct {
 	sendChan chan *packets.Packet
 	state    server.ClientStateHandler
 	logger   *log.Logger
+	dbTx     *server.DbTx
 }
 
 // Creating a constructor for the websocket client
@@ -51,6 +52,7 @@ func NewWebSocketClient(hub *server.Hub, writer http.ResponseWriter, request *ht
 		//Making a custom logger that writes the log with "Client unknown" as the prefix since we don't
 		//have the client id yet, then it prints the standard flags such as date and time
 		logger: log.New(log.Writer(), "Client unknown: ", log.LstdFlags),
+		dbTx:   hub.NewDbTx(),
 	}
 
 	return c, nil
@@ -208,6 +210,11 @@ func (c *WebSocketClient) WritePump() {
 		}
 
 	}
+}
+
+// Function for database transactions
+func (c *WebSocketClient) DbTx() *server.DbTx {
+	return c.dbTx
 }
 
 // Closing function

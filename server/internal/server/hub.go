@@ -1,11 +1,36 @@
 package server
 
 import (
+	"context"
+	"database/sql"
+	_ "embed"
 	"log"
 	"net/http"
+	"server/internal/server/db"
 	"server/internal/server/objects"
 	"server/pkg/packets"
+
+	_ "modernc.org/sqlite"
 )
+
+//go:embed db/config/schema.sql
+var schemaGenSql string
+
+//The schemaGenSql string will hold all the sql that we'll run
+
+// Structure for database transactions
+type DbTx struct {
+	Ctx     context.Context
+	Queries *db.Queries
+}
+
+// Constructor for the DbTx struct (which will also be methods for the Hub)
+func (h *Hub) NewDbTx() *DbTx {
+	return &DbTx{
+		Ctx:     context.Background(),
+		Queries: db.New(h.dbPool),
+	}
+}
 
 // A structure for the state machine to process client side messages
 type ClientStateHandler interface {
@@ -50,6 +75,9 @@ type ClientInterfacer interface {
 	//Pumps data from the connected socket to the client
 	WritePump()
 
+	//A reference to the database transaction context for this client
+	DbTx() *DbTx
+
 	//Closing client connection + cleanup
 	Close(reason string) //passing in this parameter to know the reason behind closing
 }
@@ -66,15 +94,24 @@ type Hub struct {
 
 	//Channel for unregistering the clients
 	UnregisterChan chan ClientInterfacer
+
+	//Database connection tool
+	dbPool *sql.DB
 }
 
 // Constructor for the Hub:
 func NewHub() *Hub {
+	dbPool, err := sql.Open("sqlite", "db.sqlite")
+	if err != nil {
+		log.Fatalf("Error opening database: %v", err)
+	}
+
 	return &Hub{
 		Clients:        objects.NewSharedCollection[ClientInterfacer](),
 		BroadcastChan:  make(chan *packets.Packet),
 		RegisterChan:   make(chan ClientInterfacer),
 		UnregisterChan: make(chan ClientInterfacer),
+		dbPool:         dbPool, //Now each client interface will have its own db transaction
 	}
 }
 
@@ -88,6 +125,11 @@ func NewHub() *Hub {
 // (Also, the reason for using a select loop: if the Hub gets two requests, it'll select one,
 // process it and then move to the other)
 func (h *Hub) Run() {
+	log.Println("Initializing database...")
+	if _, err := h.dbPool.ExecContext(context.Background(), schemaGenSql); err != nil {
+		log.Fatalf("Error initializing database: %v", err)
+	}
+
 	log.Println("Awaiting client registeration!")
 	for {
 		select {

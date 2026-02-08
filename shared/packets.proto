@@ -9,6 +9,20 @@ message ChatMessage {
 message IdMessage {
   uint64 id = 1;
 }
+message LoginRequestMessage {
+  string username = 1;
+  string password = 2;
+}
+message RegisterRequestMessage {
+  string username = 1;
+  string password = 2;
+}
+message OkResponseMessage {
+  //Leaving empty, since no message is needed in this case
+}
+message DenyResponseMessage {
+  string reason = 2;
+}
 
 // Creating a wrapper named Packet that packs any message with the sender id
 message Packet {
@@ -16,5 +30,9 @@ message Packet {
   oneof msg {
     ChatMessage chat = 2;
     IdMessage id = 3;
+    LoginRequestMessage login_request = 4;
+    RegisterRequestMessage register_request = 5;
+    OkResponseMessage ok_response = 6;
+    DenyResponseMessage deny_response = 7;
   }
 }
