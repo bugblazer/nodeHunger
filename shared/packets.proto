@@ -23,6 +23,19 @@ message OkResponseMessage {
 message DenyResponseMessage {
   string reason = 2;
 }
+message PlayerMessage {
+  uint64 id = 1;
+  string name = 2;
+  double x = 3;
+  double y = 4;
+  double radius = 5;
+  double direction = 6;
+  double speed = 7;
+}
+message PlayerDirectionMessage {
+  double direction = 1;
+} //This is the player direction (can be any angle between 0 and 360 deg.
+  //It'll only be sent from the client so no need for any ID.)
 
 // Creating a wrapper named Packet that packs any message with the sender id
 message Packet {
@@ -34,5 +47,7 @@ message Packet {
     RegisterRequestMessage register_request = 5;
     OkResponseMessage ok_response = 6;
     DenyResponseMessage deny_response = 7;
+    PlayerMessage player = 8;
+    PlayerDirectionMessage player_direction = 9;
   }
 }
