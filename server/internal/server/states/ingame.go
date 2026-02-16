@@ -46,10 +46,31 @@ func (g *InGame) OnEnter() {
 	g.player.X = rand.Float64() * 1000
 	g.player.Y = rand.Float64() * 1000
 	g.player.Speed = 150.0
-	g.player.Radius = 20
+	g.player.Radius = 25
 
 	//Sending the initial state of the player to the client
 	g.client.SocketSend(packets.NewPlayer(g.client.Id(), g.player))
+
+	//Sending the spores to the client in the background using go routines
+	go func() {
+		const batchSize = 20
+		sporesBatch := make(map[uint64]*objects.Spore, batchSize)
+
+		g.client.SharedGameObjects().Spores.ForEach(func(sporeId uint64, spore *objects.Spore) {
+			sporesBatch[sporeId] = spore
+
+			if len(sporesBatch) >= batchSize {
+				g.client.SocketSend(packets.NewSporeBatch(sporesBatch))
+				sporesBatch = make(map[uint64]*objects.Spore, batchSize)
+				time.Sleep(50 * time.Millisecond)
+			}
+		})
+
+		//Sending any remaining spores
+		if len(sporesBatch) > 0 {
+			g.client.SocketSend(packets.NewSporeBatch(sporesBatch))
+		}
+	}()
 }
 
 // Handling chat
@@ -59,6 +80,10 @@ func (g *InGame) HandleMessage(senderId uint64, message packets.Msg) {
 		g.handlePlayer(senderId, message) //ignores the message if the client and sender IDs are same
 	case *packets.Packet_PlayerDirection:
 		g.handlePlayerDirection(senderId, message)
+	case *packets.Packet_Chat:
+		g.HandleChat(senderId, message)
+	case *packets.Packet_SporeConsumed:
+		g.handleSporeConsumed(senderId, message)
 	}
 }
 
@@ -93,6 +118,18 @@ func (g *InGame) handlePlayerDirection(senderId uint64, message *packets.Packet_
 			go g.updatePlayerLoop(ctx)
 		}
 	}
+}
+
+func (g *InGame) HandleChat(senderId uint64, message *packets.Packet_Chat) {
+	if senderId == g.client.Id() {
+		g.client.Broadcast(message)
+	} else {
+		g.client.SocketSendAs(message, senderId)
+	}
+}
+
+func (g *InGame) handleSporeConsumed(senderId uint64, message *packets.Packet_SporeConsumed) {
+	g.logger.Printf("Spore %d consumed by player", message.SporeConsumed.SporeId)
 }
 
 // Function to keep running syncPlayer in a loop

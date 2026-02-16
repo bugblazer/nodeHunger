@@ -36,6 +36,18 @@ message PlayerDirectionMessage {
   double direction = 1;
 } //This is the player direction (can be any angle between 0 and 360 deg.
   //It'll only be sent from the client so no need for any ID.)
+message SporeMessage {
+  uint64 id = 1;
+  double x = 2;
+  double y = 3;
+  double radius = 4;
+}
+message SporeConsumedMessage {
+  uint64 spore_id = 1;
+}
+message SporeBatchMessage {
+  repeated SporeMessage spores = 1;
+}
 
 // Creating a wrapper named Packet that packs any message with the sender id
 message Packet {
@@ -49,5 +61,8 @@ message Packet {
     DenyResponseMessage deny_response = 7;
     PlayerMessage player = 8;
     PlayerDirectionMessage player_direction = 9;
+    SporeMessage spore = 10;
+    SporeConsumedMessage spore_consumed = 11;
+    SporeBatchMessage spores_batch = 12;
   }
 }

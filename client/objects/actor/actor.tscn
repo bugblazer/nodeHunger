@@ -1,9 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://brdsuqtd2p6bl"]
+[gd_scene load_steps=5 format=3 uid="uid://brdsuqtd2p6bl"]
 
 [ext_resource type="Script" uid="uid://cgika4eriebxs" path="res://objects/actor/actor.gd" id="1_pjc7i"]
+[ext_resource type="FontFile" uid="uid://nnpfqwt3123v" path="res://resources/arialroundedmtbold.ttf" id="2_8l7sg"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8l7sg"]
 resource_local_to_scene = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_pjc7i"]
+font = ExtResource("2_8l7sg")
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)
 
 [node name="Actor" type="Area2D"]
 script = ExtResource("1_pjc7i")
@@ -23,6 +29,7 @@ offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
+label_settings = SubResource("LabelSettings_pjc7i")
 horizontal_alignment = 1
 vertical_alignment = 1
 
