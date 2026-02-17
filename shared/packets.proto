@@ -62,6 +62,9 @@ message HiscoreMessage {
 message HiscoreBoardMessage {
   repeated HiscoreMessage hiscores = 1;
 }
+message FinishedBrowsingHiscoresMessage {
+
+}
 
 // Creating a wrapper named Packet that packs any message with the sender id
 message Packet {
@@ -82,5 +85,6 @@ message Packet {
     HiscoreBoardRequestMessage hiscore_board_request = 14;
     HiscoreMessage hiscore = 15;
     HiscoreBoardMessage hiscore_board = 16;
+    FinishedBrowsingHiscoresMessage finished_browsing_hiscores = 17;
   }
 }
