@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://4dixftth84gm"]
+
+[ext_resource type="Script" uid="uid://belgmahuq01p4" path="res://states/browsing_hiscores/browsing_hiscores.gd" id="1_0a663"]
+[ext_resource type="PackedScene" uid="uid://ctwq660v0npav" path="res://classes/hiscores/hiscores.tscn" id="2_gr358"]
+
+[node name="BrowsingHiscores" type="Node"]
+script = ExtResource("1_0a663")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Hiscores" parent="UI" instance=ExtResource("2_gr358")]
+custom_minimum_size = Vector2(400, 400)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5

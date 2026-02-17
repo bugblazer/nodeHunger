@@ -91,6 +91,6 @@ func (s *SharedCollection[T]) Get(id uint64) (T, bool) {
 // Method to get the number of objects in the collection
 // not locking because I don't think it's worth it to lock and slow down
 // an approximate should do just fine
-func (s *SharedCollection[T]) len() int {
+func (s *SharedCollection[T]) Len() int {
 	return len(s.objectsMap)
 }

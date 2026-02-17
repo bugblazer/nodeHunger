@@ -8,6 +8,7 @@ var _action_on_ok_received: Callable
 @onready var _password_field: LineEdit = $UI/VBoxContainer/Password
 @onready var _login_button: Button = $UI/VBoxContainer/HBoxContainer/LoginButton
 @onready var _register_button: Button = $UI/VBoxContainer/HBoxContainer/RegisterButton
+@onready var _hiscores_button: Button = $UI/VBoxContainer/HBoxContainer/HiscoresButton
 @onready var _log: Log = $UI/VBoxContainer/Log
 
 #Establishing connections:
@@ -16,6 +17,13 @@ func _ready() -> void:
 	WS.connection_closed.connect(_on_ws_connection_closed)
 	_login_button.pressed.connect(_on_login_button_pressed)
 	_register_button.pressed.connect(_on_register_button_pressed)
+	_hiscores_button.pressed.connect(_on_hiscores_button_pressed)
+	
+	#var hiscores: Hiscores = $UI/VBoxContainer/Hiscores
+	#hiscores.set_hiscore("Abdul", 98765)
+	#hiscores.set_hiscore("Arsh", 98760)
+	#hiscores.set_hiscore("Hurairah", 12345)
+	#hiscores.set_hiscore("Mishal", 12345)
 
 func _on_ws_packet_recieved(packet: packets.Packet) -> void:
 	var sender_id := packet.get_sender_id()
@@ -47,3 +55,7 @@ func _on_register_button_pressed() -> void:
 	register_request_msg.set_password(_password_field.text)
 	WS.send(packet)
 	_action_on_ok_received = func(): _log.success("Registeration successful!")
+
+#Setting the state
+func _on_hiscores_button_pressed() -> void:
+	GameManager.set_state(GameManager.State.BROWSING_HISCORES)

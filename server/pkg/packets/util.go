@@ -75,3 +75,11 @@ func NewSporeBatch(spores map[uint64]*objects.Spore) Msg {
 		},
 	}
 }
+
+func NewHiscoreBoard(hiscores []*HiscoreMessage) Msg {
+	return &Packet_HiscoreBoard{
+		HiscoreBoard: &HiscoreBoardMessage{
+			Hiscores: hiscores,
+		},
+	}
+}

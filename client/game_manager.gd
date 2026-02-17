@@ -5,6 +5,7 @@ enum State {
 	ENTERED, #Connecting to the server etc
 	CONNECTED, #Login/register state
 	INGAME, #In-game logic, chat etc
+	BROWSING_HISCORES, #for the all-time leaderboard browsing
 }
 
 #Creating a dictionary that will hold scenes related to different states
@@ -12,6 +13,7 @@ var _states_scenes: Dictionary[State, String] = {
 	State.ENTERED: "res://states/entered/entered.tscn",
 	State.CONNECTED: "res://states/connected/connected.tscn",
 	State.INGAME: "res://states/ingame/ingame.tscn",
+	State.BROWSING_HISCORES: "res://states/browsing_hiscores/browsing_hiscores.tscn",
 }
 
 var client_id: int

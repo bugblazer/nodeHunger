@@ -18,7 +18,11 @@ var speed: float
 var is_player: bool
 
 var velocity: Vector2
-var radius: float
+var radius: float:
+	set(new_radius):
+		radius = new_radius
+		_collision_shape.radius = new_radius
+		queue_redraw()
 
 #Constructor for the class
 static func instantiate(actor_id: int, actor_name: String, x: float, y: float, radius: float, speed: float, is_player: bool) -> Actor:
@@ -81,4 +85,4 @@ func _physics_process(delta: float) -> void:
 		
 #drawing the player blob
 func _draw() -> void:
-	draw_circle(Vector2.ZERO, _collision_shape.radius, Color.PEACH_PUFF)
+	draw_circle(Vector2.ZERO, _collision_shape.radius, Color.BURLYWOOD)
