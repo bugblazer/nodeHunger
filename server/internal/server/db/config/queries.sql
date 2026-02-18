@@ -44,3 +44,16 @@ FROM players
 ORDER BY best_score DESC
 LIMIT ?
 OFFSET ?;
+
+/*Query to fetch the username and his score, present them in order (top 10)*/
+-- name: GetPlayerByName :one
+SELECT * FROM players
+WHERE name LIKE ?
+LIMIT 1;
+
+-- name: GetPlayerRank :one
+SELECT COUNT(*) + 1 AS "rank" FROM players
+WHERE best_score >= (
+    SELECT best_score FROM players p2
+    WHERE p2.id = ?
+);

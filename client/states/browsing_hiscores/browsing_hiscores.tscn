@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://4dixftth84gm"]
+[gd_scene load_steps=4 format=3 uid="uid://4dixftth84gm"]
 
 [ext_resource type="Script" uid="uid://belgmahuq01p4" path="res://states/browsing_hiscores/browsing_hiscores.gd" id="1_0a663"]
 [ext_resource type="PackedScene" uid="uid://ctwq660v0npav" path="res://classes/hiscores/hiscores.tscn" id="2_gr358"]
+[ext_resource type="Script" uid="uid://8qda8samenj8" path="res://classes/log/log.gd" id="3_jq3og"]
 
 [node name="BrowsingHiscores" type="Node"]
 script = ExtResource("1_0a663")
@@ -22,10 +23,28 @@ offset_bottom = 217.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackButton" type="Button" parent="UI/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/VBoxContainer"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="UI/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Back"
+
+[node name="LineEdit" type="LineEdit" parent="UI/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Search"
+
+[node name="SearchButton" type="Button" parent="UI/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Search"
 
 [node name="Hiscores" parent="UI/VBoxContainer" instance=ExtResource("2_gr358")]
 custom_minimum_size = Vector2(400, 400)
 layout_mode = 2
+
+[node name="Log" type="RichTextLabel" parent="UI/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+script = ExtResource("3_jq3og")
+metadata/_custom_type_script = "uid://8qda8samenj8"
