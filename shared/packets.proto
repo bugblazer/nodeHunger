@@ -16,6 +16,7 @@ message LoginRequestMessage {
 message RegisterRequestMessage {
   string username = 1;
   string password = 2;
+  int32 color = 3;
 }
 message OkResponseMessage {
   //Leaving empty, since no message is needed in this case
@@ -31,6 +32,7 @@ message PlayerMessage {
   double radius = 5;
   double direction = 6;
   double speed = 7;
+  int32 color = 8;
 }
 message PlayerDirectionMessage {
   double direction = 1;

@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://4dixftth84gm"]
+[gd_scene load_steps=6 format=3 uid="uid://4dixftth84gm"]
 
 [ext_resource type="Script" uid="uid://belgmahuq01p4" path="res://states/browsing_hiscores/browsing_hiscores.gd" id="1_0a663"]
+[ext_resource type="Theme" uid="uid://bescrmgmffkug" path="res://resources/game_theme.tres" id="2_extph"]
 [ext_resource type="PackedScene" uid="uid://ctwq660v0npav" path="res://classes/hiscores/hiscores.tscn" id="2_gr358"]
 [ext_resource type="Script" uid="uid://8qda8samenj8" path="res://classes/log/log.gd" id="3_jq3og"]
+[ext_resource type="Texture2D" uid="uid://bqf06g8ji7ppq" path="res://resources/ui_bg(highscore) re.png" id="4_o6vvw"]
 
 [node name="BrowsingHiscores" type="Node"]
 script = ExtResource("1_0a663")
@@ -22,6 +24,7 @@ offset_right = 200.0
 offset_bottom = 217.5
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_extph")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/VBoxContainer"]
 layout_mode = 2
@@ -44,7 +47,16 @@ custom_minimum_size = Vector2(400, 400)
 layout_mode = 2
 
 [node name="Log" type="RichTextLabel" parent="UI/VBoxContainer"]
-custom_minimum_size = Vector2(0, 100)
+custom_minimum_size = Vector2(0, 90)
 layout_mode = 2
+bbcode_enabled = true
+text = "[center][/center]"
 script = ExtResource("3_jq3og")
 metadata/_custom_type_script = "uid://8qda8samenj8"
+
+[node name="background_hiscores" type="Sprite2D" parent="."]
+texture_repeat = 2
+texture = ExtResource("4_o6vvw")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 1152, 648)

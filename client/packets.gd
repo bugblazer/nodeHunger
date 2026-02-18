@@ -853,6 +853,11 @@ class RegisterRequestMessage:
 		service.field = __password
 		data[__password.tag] = service
 		
+		__color = PBField.new("color", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = __color
+		data[__color.tag] = service
+		
 	var data = {}
 	
 	var __username: PBField
@@ -880,6 +885,19 @@ class RegisterRequestMessage:
 		__password.value = DEFAULT_VALUES_3[PB_DATA_TYPE.STRING]
 	func set_password(value : String) -> void:
 		__password.value = value
+	
+	var __color: PBField
+	func has_color() -> bool:
+		if __color.value != null:
+			return true
+		return false
+	func get_color() -> int:
+		return __color.value
+	func clear_color() -> void:
+		data[3].state = PB_SERVICE_STATE.UNFILLED
+		__color.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_color(value : int) -> void:
+		__color.value = value
 	
 	func _to_string() -> String:
 		return PBPacker.message_to_string(data)
@@ -1013,6 +1031,11 @@ class PlayerMessage:
 		service.field = __speed
 		data[__speed.tag] = service
 		
+		__color = PBField.new("color", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 8, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = __color
+		data[__color.tag] = service
+		
 	var data = {}
 	
 	var __id: PBField
@@ -1105,6 +1128,19 @@ class PlayerMessage:
 		__speed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE]
 	func set_speed(value : float) -> void:
 		__speed.value = value
+	
+	var __color: PBField
+	func has_color() -> bool:
+		if __color.value != null:
+			return true
+		return false
+	func get_color() -> int:
+		return __color.value
+	func clear_color() -> void:
+		data[8].state = PB_SERVICE_STATE.UNFILLED
+		__color.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_color(value : int) -> void:
+		__color.value = value
 	
 	func _to_string() -> String:
 		return PBPacker.message_to_string(data)

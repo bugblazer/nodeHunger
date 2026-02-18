@@ -165,6 +165,7 @@ type RegisterRequestMessage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	Color         int32                  `protobuf:"varint,3,opt,name=color,proto3" json:"color,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -211,6 +212,13 @@ func (x *RegisterRequestMessage) GetPassword() string {
 		return x.Password
 	}
 	return ""
+}
+
+func (x *RegisterRequestMessage) GetColor() int32 {
+	if x != nil {
+		return x.Color
+	}
+	return 0
 }
 
 type OkResponseMessage struct {
@@ -302,6 +310,7 @@ type PlayerMessage struct {
 	Radius        float64                `protobuf:"fixed64,5,opt,name=radius,proto3" json:"radius,omitempty"`
 	Direction     float64                `protobuf:"fixed64,6,opt,name=direction,proto3" json:"direction,omitempty"`
 	Speed         float64                `protobuf:"fixed64,7,opt,name=speed,proto3" json:"speed,omitempty"`
+	Color         int32                  `protobuf:"varint,8,opt,name=color,proto3" json:"color,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -381,6 +390,13 @@ func (x *PlayerMessage) GetDirection() float64 {
 func (x *PlayerMessage) GetSpeed() float64 {
 	if x != nil {
 		return x.Speed
+	}
+	return 0
+}
+
+func (x *PlayerMessage) GetColor() int32 {
+	if x != nil {
+		return x.Color
 	}
 	return 0
 }
@@ -1252,13 +1268,14 @@ const file_packets_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\x04R\x02id\"M\n" +
 	"\x13LoginRequestMessage\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"P\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"f\n" +
 	"\x16RegisterRequestMessage\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"\x13\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x14\n" +
+	"\x05color\x18\x03 \x01(\x05R\x05color\"\x13\n" +
 	"\x11OkResponseMessage\"-\n" +
 	"\x13DenyResponseMessage\x12\x16\n" +
-	"\x06reason\x18\x02 \x01(\tR\x06reason\"\x9b\x01\n" +
+	"\x06reason\x18\x02 \x01(\tR\x06reason\"\xb1\x01\n" +
 	"\rPlayerMessage\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\f\n" +
@@ -1266,7 +1283,8 @@ const file_packets_proto_rawDesc = "" +
 	"\x01y\x18\x04 \x01(\x01R\x01y\x12\x16\n" +
 	"\x06radius\x18\x05 \x01(\x01R\x06radius\x12\x1c\n" +
 	"\tdirection\x18\x06 \x01(\x01R\tdirection\x12\x14\n" +
-	"\x05speed\x18\a \x01(\x01R\x05speed\"6\n" +
+	"\x05speed\x18\a \x01(\x01R\x05speed\x12\x14\n" +
+	"\x05color\x18\b \x01(\x05R\x05color\"6\n" +
 	"\x16PlayerDirectionMessage\x12\x1c\n" +
 	"\tdirection\x18\x01 \x01(\x01R\tdirection\"R\n" +
 	"\fSporeMessage\x12\x0e\n" +

@@ -21,9 +21,9 @@ RETURNING *;
 /*Query to create a player from the user*/
 -- name: CreatePlayer :one
 INSERT INTO players (
-    user_id, name
+    user_id, name, color
 ) VALUES (
-    ?, ?
+    ?, ?, ?
 )
 RETURNING *;
 

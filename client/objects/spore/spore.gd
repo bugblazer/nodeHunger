@@ -4,14 +4,14 @@ const Scene := preload("res://objects/spore/spore.tscn")
 const Spore := preload("res://objects/spore/spore.gd")
 const Actor := preload("res://objects/actor/actor.gd")
 
+@onready var _collision_shape: CircleShape2D = $CollisionShape2D.shape
+
 var spore_id: int
 var x: float
 var y: float
 var radius: float
 var color: Color
 var underneath_player : bool
-
-@onready var _collision_shape: CircleShape2D = $CollisionShape2D.shape
 
 static func instantiate(spore_id: int, x: float, y: float, radius: float, underneath_player: bool) -> Spore:
 	var spore := Scene.instantiate()

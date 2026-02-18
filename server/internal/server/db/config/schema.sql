@@ -18,6 +18,7 @@ id: auto incrementing primary key of type int
 user_id: id to link the users table with players table, can't be null
 name: player name of type string, can't be null
 best_score: int type, can't be null and default is 0
+color will store the color of the player blob
 FOREIGN KEY (user_id) says that the user_id must be equal to the id in users table
 */
 CREATE TABLE IF NOT EXISTS players (
@@ -25,5 +26,6 @@ CREATE TABLE IF NOT EXISTS players (
     user_id INTEGER NOT NULL,
     name TEXT NOT NULL,
     best_score INTEGER NOT NULL DEFAULT 0,
+    color INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
