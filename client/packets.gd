@@ -966,7 +966,7 @@ class DenyResponseMessage:
 	func get_reason() -> String:
 		return __reason.value
 	func clear_reason() -> void:
-		data[2].state = PB_SERVICE_STATE.UNFILLED
+		data[1].state = PB_SERVICE_STATE.UNFILLED
 		__reason.value = DEFAULT_VALUES_3[PB_DATA_TYPE.STRING]
 	func set_reason(value : String) -> void:
 		__reason.value = value
@@ -1232,6 +1232,31 @@ class SporeMessage:
 		service.field = __radius
 		data[__radius.tag] = service
 		
+		__ejected = PBField.new("ejected", PB_DATA_TYPE.BOOL, PB_RULE.OPTIONAL, 5, true, DEFAULT_VALUES_3[PB_DATA_TYPE.BOOL])
+		service = PBServiceField.new()
+		service.field = __ejected
+		data[__ejected.tag] = service
+		
+		__from_x = PBField.new("from_x", PB_DATA_TYPE.DOUBLE, PB_RULE.OPTIONAL, 6, true, DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE])
+		service = PBServiceField.new()
+		service.field = __from_x
+		data[__from_x.tag] = service
+		
+		__from_y = PBField.new("from_y", PB_DATA_TYPE.DOUBLE, PB_RULE.OPTIONAL, 7, true, DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE])
+		service = PBServiceField.new()
+		service.field = __from_y
+		data[__from_y.tag] = service
+		
+		__owner_id = PBField.new("owner_id", PB_DATA_TYPE.UINT64, PB_RULE.OPTIONAL, 8, true, DEFAULT_VALUES_3[PB_DATA_TYPE.UINT64])
+		service = PBServiceField.new()
+		service.field = __owner_id
+		data[__owner_id.tag] = service
+		
+		__lock_seconds = PBField.new("lock_seconds", PB_DATA_TYPE.DOUBLE, PB_RULE.OPTIONAL, 9, true, DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE])
+		service = PBServiceField.new()
+		service.field = __lock_seconds
+		data[__lock_seconds.tag] = service
+		
 	var data = {}
 	
 	var __id: PBField
@@ -1285,6 +1310,71 @@ class SporeMessage:
 		__radius.value = DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE]
 	func set_radius(value : float) -> void:
 		__radius.value = value
+	
+	var __ejected: PBField
+	func has_ejected() -> bool:
+		if __ejected.value != null:
+			return true
+		return false
+	func get_ejected() -> bool:
+		return __ejected.value
+	func clear_ejected() -> void:
+		data[5].state = PB_SERVICE_STATE.UNFILLED
+		__ejected.value = DEFAULT_VALUES_3[PB_DATA_TYPE.BOOL]
+	func set_ejected(value : bool) -> void:
+		__ejected.value = value
+	
+	var __from_x: PBField
+	func has_from_x() -> bool:
+		if __from_x.value != null:
+			return true
+		return false
+	func get_from_x() -> float:
+		return __from_x.value
+	func clear_from_x() -> void:
+		data[6].state = PB_SERVICE_STATE.UNFILLED
+		__from_x.value = DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE]
+	func set_from_x(value : float) -> void:
+		__from_x.value = value
+	
+	var __from_y: PBField
+	func has_from_y() -> bool:
+		if __from_y.value != null:
+			return true
+		return false
+	func get_from_y() -> float:
+		return __from_y.value
+	func clear_from_y() -> void:
+		data[7].state = PB_SERVICE_STATE.UNFILLED
+		__from_y.value = DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE]
+	func set_from_y(value : float) -> void:
+		__from_y.value = value
+	
+	var __owner_id: PBField
+	func has_owner_id() -> bool:
+		if __owner_id.value != null:
+			return true
+		return false
+	func get_owner_id() -> int:
+		return __owner_id.value
+	func clear_owner_id() -> void:
+		data[8].state = PB_SERVICE_STATE.UNFILLED
+		__owner_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.UINT64]
+	func set_owner_id(value : int) -> void:
+		__owner_id.value = value
+	
+	var __lock_seconds: PBField
+	func has_lock_seconds() -> bool:
+		if __lock_seconds.value != null:
+			return true
+		return false
+	func get_lock_seconds() -> float:
+		return __lock_seconds.value
+	func clear_lock_seconds() -> void:
+		data[9].state = PB_SERVICE_STATE.UNFILLED
+		__lock_seconds.value = DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE]
+	func set_lock_seconds(value : float) -> void:
+		__lock_seconds.value = value
 	
 	func _to_string() -> String:
 		return PBPacker.message_to_string(data)
@@ -1352,7 +1442,7 @@ class SporeConsumedMessage:
 			return PB_ERR.PARSE_INCOMPLETE
 		return result
 	
-class SporeBatchMessage:
+class SporesBatchMessage:
 	func _init():
 		var service
 		
@@ -1712,6 +1802,258 @@ class DisconnectMessage:
 			return PB_ERR.PARSE_INCOMPLETE
 		return result
 	
+class FeedMessage:
+	func _init():
+		var service
+		
+		__direction = PBField.new("direction", PB_DATA_TYPE.DOUBLE, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE])
+		service = PBServiceField.new()
+		service.field = __direction
+		data[__direction.tag] = service
+		
+	var data = {}
+	
+	var __direction: PBField
+	func has_direction() -> bool:
+		if __direction.value != null:
+			return true
+		return false
+	func get_direction() -> float:
+		return __direction.value
+	func clear_direction() -> void:
+		data[1].state = PB_SERVICE_STATE.UNFILLED
+		__direction.value = DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE]
+	func set_direction(value : float) -> void:
+		__direction.value = value
+	
+	func _to_string() -> String:
+		return PBPacker.message_to_string(data)
+		
+	func to_bytes() -> PackedByteArray:
+		return PBPacker.pack_message(data)
+		
+	func from_bytes(bytes : PackedByteArray, offset : int = 0, limit : int = -1) -> int:
+		var cur_limit = bytes.size()
+		if limit != -1:
+			cur_limit = limit
+		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
+		if result == cur_limit:
+			if PBPacker.check_required(data):
+				if limit == -1:
+					return PB_ERR.NO_ERRORS
+			else:
+				return PB_ERR.REQUIRED_FIELDS
+		elif limit == -1 && result > 0:
+			return PB_ERR.PARSE_INCOMPLETE
+		return result
+	
+class VirusMessage:
+	func _init():
+		var service
+		
+		__id = PBField.new("id", PB_DATA_TYPE.UINT64, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.UINT64])
+		service = PBServiceField.new()
+		service.field = __id
+		data[__id.tag] = service
+		
+		__x = PBField.new("x", PB_DATA_TYPE.DOUBLE, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE])
+		service = PBServiceField.new()
+		service.field = __x
+		data[__x.tag] = service
+		
+		__y = PBField.new("y", PB_DATA_TYPE.DOUBLE, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE])
+		service = PBServiceField.new()
+		service.field = __y
+		data[__y.tag] = service
+		
+		__radius = PBField.new("radius", PB_DATA_TYPE.DOUBLE, PB_RULE.OPTIONAL, 4, true, DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE])
+		service = PBServiceField.new()
+		service.field = __radius
+		data[__radius.tag] = service
+		
+	var data = {}
+	
+	var __id: PBField
+	func has_id() -> bool:
+		if __id.value != null:
+			return true
+		return false
+	func get_id() -> int:
+		return __id.value
+	func clear_id() -> void:
+		data[1].state = PB_SERVICE_STATE.UNFILLED
+		__id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.UINT64]
+	func set_id(value : int) -> void:
+		__id.value = value
+	
+	var __x: PBField
+	func has_x() -> bool:
+		if __x.value != null:
+			return true
+		return false
+	func get_x() -> float:
+		return __x.value
+	func clear_x() -> void:
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		__x.value = DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE]
+	func set_x(value : float) -> void:
+		__x.value = value
+	
+	var __y: PBField
+	func has_y() -> bool:
+		if __y.value != null:
+			return true
+		return false
+	func get_y() -> float:
+		return __y.value
+	func clear_y() -> void:
+		data[3].state = PB_SERVICE_STATE.UNFILLED
+		__y.value = DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE]
+	func set_y(value : float) -> void:
+		__y.value = value
+	
+	var __radius: PBField
+	func has_radius() -> bool:
+		if __radius.value != null:
+			return true
+		return false
+	func get_radius() -> float:
+		return __radius.value
+	func clear_radius() -> void:
+		data[4].state = PB_SERVICE_STATE.UNFILLED
+		__radius.value = DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE]
+	func set_radius(value : float) -> void:
+		__radius.value = value
+	
+	func _to_string() -> String:
+		return PBPacker.message_to_string(data)
+		
+	func to_bytes() -> PackedByteArray:
+		return PBPacker.pack_message(data)
+		
+	func from_bytes(bytes : PackedByteArray, offset : int = 0, limit : int = -1) -> int:
+		var cur_limit = bytes.size()
+		if limit != -1:
+			cur_limit = limit
+		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
+		if result == cur_limit:
+			if PBPacker.check_required(data):
+				if limit == -1:
+					return PB_ERR.NO_ERRORS
+			else:
+				return PB_ERR.REQUIRED_FIELDS
+		elif limit == -1 && result > 0:
+			return PB_ERR.PARSE_INCOMPLETE
+		return result
+	
+class VirusesBatchMessage:
+	func _init():
+		var service
+		
+		var __viruses_default: Array[VirusMessage] = []
+		__viruses = PBField.new("viruses", PB_DATA_TYPE.MESSAGE, PB_RULE.REPEATED, 1, true, __viruses_default)
+		service = PBServiceField.new()
+		service.field = __viruses
+		service.func_ref = Callable(self, "add_viruses")
+		data[__viruses.tag] = service
+		
+	var data = {}
+	
+	var __viruses: PBField
+	func get_viruses() -> Array[VirusMessage]:
+		return __viruses.value
+	func clear_viruses() -> void:
+		data[1].state = PB_SERVICE_STATE.UNFILLED
+		__viruses.value.clear()
+	func add_viruses() -> VirusMessage:
+		var element = VirusMessage.new()
+		__viruses.value.append(element)
+		return element
+	
+	func _to_string() -> String:
+		return PBPacker.message_to_string(data)
+		
+	func to_bytes() -> PackedByteArray:
+		return PBPacker.pack_message(data)
+		
+	func from_bytes(bytes : PackedByteArray, offset : int = 0, limit : int = -1) -> int:
+		var cur_limit = bytes.size()
+		if limit != -1:
+			cur_limit = limit
+		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
+		if result == cur_limit:
+			if PBPacker.check_required(data):
+				if limit == -1:
+					return PB_ERR.NO_ERRORS
+			else:
+				return PB_ERR.REQUIRED_FIELDS
+		elif limit == -1 && result > 0:
+			return PB_ERR.PARSE_INCOMPLETE
+		return result
+	
+class VirusConsumedMessage:
+	func _init():
+		var service
+		
+		__virus_id = PBField.new("virus_id", PB_DATA_TYPE.UINT64, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.UINT64])
+		service = PBServiceField.new()
+		service.field = __virus_id
+		data[__virus_id.tag] = service
+		
+		__player_id = PBField.new("player_id", PB_DATA_TYPE.UINT64, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.UINT64])
+		service = PBServiceField.new()
+		service.field = __player_id
+		data[__player_id.tag] = service
+		
+	var data = {}
+	
+	var __virus_id: PBField
+	func has_virus_id() -> bool:
+		if __virus_id.value != null:
+			return true
+		return false
+	func get_virus_id() -> int:
+		return __virus_id.value
+	func clear_virus_id() -> void:
+		data[1].state = PB_SERVICE_STATE.UNFILLED
+		__virus_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.UINT64]
+	func set_virus_id(value : int) -> void:
+		__virus_id.value = value
+	
+	var __player_id: PBField
+	func has_player_id() -> bool:
+		if __player_id.value != null:
+			return true
+		return false
+	func get_player_id() -> int:
+		return __player_id.value
+	func clear_player_id() -> void:
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		__player_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.UINT64]
+	func set_player_id(value : int) -> void:
+		__player_id.value = value
+	
+	func _to_string() -> String:
+		return PBPacker.message_to_string(data)
+		
+	func to_bytes() -> PackedByteArray:
+		return PBPacker.pack_message(data)
+		
+	func from_bytes(bytes : PackedByteArray, offset : int = 0, limit : int = -1) -> int:
+		var cur_limit = bytes.size()
+		if limit != -1:
+			cur_limit = limit
+		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
+		if result == cur_limit:
+			if PBPacker.check_required(data):
+				if limit == -1:
+					return PB_ERR.NO_ERRORS
+			else:
+				return PB_ERR.REQUIRED_FIELDS
+		elif limit == -1 && result > 0:
+			return PB_ERR.PARSE_INCOMPLETE
+		return result
+	
 class Packet:
 	func _init():
 		var service
@@ -1829,6 +2171,30 @@ class Packet:
 		service.func_ref = Callable(self, "new_disconnect")
 		data[__disconnect.tag] = service
 		
+		__feed = PBField.new("feed", PB_DATA_TYPE.MESSAGE, PB_RULE.OPTIONAL, 20, true, DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE])
+		service = PBServiceField.new()
+		service.field = __feed
+		service.func_ref = Callable(self, "new_feed")
+		data[__feed.tag] = service
+		
+		__virus = PBField.new("virus", PB_DATA_TYPE.MESSAGE, PB_RULE.OPTIONAL, 21, true, DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE])
+		service = PBServiceField.new()
+		service.field = __virus
+		service.func_ref = Callable(self, "new_virus")
+		data[__virus.tag] = service
+		
+		__viruses_batch = PBField.new("viruses_batch", PB_DATA_TYPE.MESSAGE, PB_RULE.OPTIONAL, 22, true, DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE])
+		service = PBServiceField.new()
+		service.field = __viruses_batch
+		service.func_ref = Callable(self, "new_viruses_batch")
+		data[__viruses_batch.tag] = service
+		
+		__virus_consumed = PBField.new("virus_consumed", PB_DATA_TYPE.MESSAGE, PB_RULE.OPTIONAL, 23, true, DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE])
+		service = PBServiceField.new()
+		service.field = __virus_consumed
+		service.func_ref = Callable(self, "new_virus_consumed")
+		data[__virus_consumed.tag] = service
+		
 	var data = {}
 	
 	var __sender_id: PBField
@@ -1890,6 +2256,14 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__chat.value = ChatMessage.new()
 		return __chat.value
 	
@@ -1939,6 +2313,14 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__id.value = IdMessage.new()
 		return __id.value
 	
@@ -1988,6 +2370,14 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__login_request.value = LoginRequestMessage.new()
 		return __login_request.value
 	
@@ -2037,6 +2427,14 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__register_request.value = RegisterRequestMessage.new()
 		return __register_request.value
 	
@@ -2086,6 +2484,14 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__ok_response.value = OkResponseMessage.new()
 		return __ok_response.value
 	
@@ -2135,6 +2541,14 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__deny_response.value = DenyResponseMessage.new()
 		return __deny_response.value
 	
@@ -2184,6 +2598,14 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__player.value = PlayerMessage.new()
 		return __player.value
 	
@@ -2233,6 +2655,14 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__player_direction.value = PlayerDirectionMessage.new()
 		return __player_direction.value
 	
@@ -2282,6 +2712,14 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__spore.value = SporeMessage.new()
 		return __spore.value
 	
@@ -2331,6 +2769,14 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__spore_consumed.value = SporeConsumedMessage.new()
 		return __spore_consumed.value
 	
@@ -2339,12 +2785,12 @@ class Packet:
 		if __spores_batch.value != null:
 			return true
 		return false
-	func get_spores_batch() -> SporeBatchMessage:
+	func get_spores_batch() -> SporesBatchMessage:
 		return __spores_batch.value
 	func clear_spores_batch() -> void:
 		data[12].state = PB_SERVICE_STATE.UNFILLED
 		__spores_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
-	func new_spores_batch() -> SporeBatchMessage:
+	func new_spores_batch() -> SporesBatchMessage:
 		__chat.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[2].state = PB_SERVICE_STATE.UNFILLED
 		__id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
@@ -2380,7 +2826,15 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
-		__spores_batch.value = SporeBatchMessage.new()
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
+		__spores_batch.value = SporesBatchMessage.new()
 		return __spores_batch.value
 	
 	var __player_consumed: PBField
@@ -2429,6 +2883,14 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__player_consumed.value = PlayerConsumedMessage.new()
 		return __player_consumed.value
 	
@@ -2478,6 +2940,14 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__hiscore_board_request.value = HiscoreBoardRequestMessage.new()
 		return __hiscore_board_request.value
 	
@@ -2527,6 +2997,14 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__hiscore.value = HiscoreMessage.new()
 		return __hiscore.value
 	
@@ -2576,6 +3054,14 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__hiscore_board.value = HiscoreBoardMessage.new()
 		return __hiscore_board.value
 	
@@ -2625,6 +3111,14 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__finished_browsing_hiscores.value = FinishedBrowsingHiscoresMessage.new()
 		return __finished_browsing_hiscores.value
 	
@@ -2674,6 +3168,14 @@ class Packet:
 		data[18].state = PB_SERVICE_STATE.FILLED
 		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__search_hiscore.value = SearchHiscoreMessage.new()
 		return __search_hiscore.value
 	
@@ -2723,8 +3225,244 @@ class Packet:
 		__search_hiscore.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 		data[18].state = PB_SERVICE_STATE.UNFILLED
 		data[19].state = PB_SERVICE_STATE.FILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
 		__disconnect.value = DisconnectMessage.new()
 		return __disconnect.value
+	
+	var __feed: PBField
+	func has_feed() -> bool:
+		if __feed.value != null:
+			return true
+		return false
+	func get_feed() -> FeedMessage:
+		return __feed.value
+	func clear_feed() -> void:
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+	func new_feed() -> FeedMessage:
+		__chat.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		__id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[3].state = PB_SERVICE_STATE.UNFILLED
+		__login_request.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[4].state = PB_SERVICE_STATE.UNFILLED
+		__register_request.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[5].state = PB_SERVICE_STATE.UNFILLED
+		__ok_response.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[6].state = PB_SERVICE_STATE.UNFILLED
+		__deny_response.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[7].state = PB_SERVICE_STATE.UNFILLED
+		__player.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[8].state = PB_SERVICE_STATE.UNFILLED
+		__player_direction.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[9].state = PB_SERVICE_STATE.UNFILLED
+		__spore.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[10].state = PB_SERVICE_STATE.UNFILLED
+		__spore_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[11].state = PB_SERVICE_STATE.UNFILLED
+		__spores_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[12].state = PB_SERVICE_STATE.UNFILLED
+		__player_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[13].state = PB_SERVICE_STATE.UNFILLED
+		__hiscore_board_request.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[14].state = PB_SERVICE_STATE.UNFILLED
+		__hiscore.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[15].state = PB_SERVICE_STATE.UNFILLED
+		__hiscore_board.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[16].state = PB_SERVICE_STATE.UNFILLED
+		__finished_browsing_hiscores.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[17].state = PB_SERVICE_STATE.UNFILLED
+		__search_hiscore.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[18].state = PB_SERVICE_STATE.UNFILLED
+		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[19].state = PB_SERVICE_STATE.UNFILLED
+		data[20].state = PB_SERVICE_STATE.FILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = FeedMessage.new()
+		return __feed.value
+	
+	var __virus: PBField
+	func has_virus() -> bool:
+		if __virus.value != null:
+			return true
+		return false
+	func get_virus() -> VirusMessage:
+		return __virus.value
+	func clear_virus() -> void:
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+	func new_virus() -> VirusMessage:
+		__chat.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		__id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[3].state = PB_SERVICE_STATE.UNFILLED
+		__login_request.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[4].state = PB_SERVICE_STATE.UNFILLED
+		__register_request.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[5].state = PB_SERVICE_STATE.UNFILLED
+		__ok_response.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[6].state = PB_SERVICE_STATE.UNFILLED
+		__deny_response.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[7].state = PB_SERVICE_STATE.UNFILLED
+		__player.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[8].state = PB_SERVICE_STATE.UNFILLED
+		__player_direction.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[9].state = PB_SERVICE_STATE.UNFILLED
+		__spore.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[10].state = PB_SERVICE_STATE.UNFILLED
+		__spore_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[11].state = PB_SERVICE_STATE.UNFILLED
+		__spores_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[12].state = PB_SERVICE_STATE.UNFILLED
+		__player_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[13].state = PB_SERVICE_STATE.UNFILLED
+		__hiscore_board_request.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[14].state = PB_SERVICE_STATE.UNFILLED
+		__hiscore.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[15].state = PB_SERVICE_STATE.UNFILLED
+		__hiscore_board.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[16].state = PB_SERVICE_STATE.UNFILLED
+		__finished_browsing_hiscores.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[17].state = PB_SERVICE_STATE.UNFILLED
+		__search_hiscore.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[18].state = PB_SERVICE_STATE.UNFILLED
+		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		data[21].state = PB_SERVICE_STATE.FILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = VirusMessage.new()
+		return __virus.value
+	
+	var __viruses_batch: PBField
+	func has_viruses_batch() -> bool:
+		if __viruses_batch.value != null:
+			return true
+		return false
+	func get_viruses_batch() -> VirusesBatchMessage:
+		return __viruses_batch.value
+	func clear_viruses_batch() -> void:
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+	func new_viruses_batch() -> VirusesBatchMessage:
+		__chat.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		__id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[3].state = PB_SERVICE_STATE.UNFILLED
+		__login_request.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[4].state = PB_SERVICE_STATE.UNFILLED
+		__register_request.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[5].state = PB_SERVICE_STATE.UNFILLED
+		__ok_response.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[6].state = PB_SERVICE_STATE.UNFILLED
+		__deny_response.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[7].state = PB_SERVICE_STATE.UNFILLED
+		__player.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[8].state = PB_SERVICE_STATE.UNFILLED
+		__player_direction.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[9].state = PB_SERVICE_STATE.UNFILLED
+		__spore.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[10].state = PB_SERVICE_STATE.UNFILLED
+		__spore_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[11].state = PB_SERVICE_STATE.UNFILLED
+		__spores_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[12].state = PB_SERVICE_STATE.UNFILLED
+		__player_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[13].state = PB_SERVICE_STATE.UNFILLED
+		__hiscore_board_request.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[14].state = PB_SERVICE_STATE.UNFILLED
+		__hiscore.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[15].state = PB_SERVICE_STATE.UNFILLED
+		__hiscore_board.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[16].state = PB_SERVICE_STATE.UNFILLED
+		__finished_browsing_hiscores.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[17].state = PB_SERVICE_STATE.UNFILLED
+		__search_hiscore.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[18].state = PB_SERVICE_STATE.UNFILLED
+		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		data[22].state = PB_SERVICE_STATE.FILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[23].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = VirusesBatchMessage.new()
+		return __viruses_batch.value
+	
+	var __virus_consumed: PBField
+	func has_virus_consumed() -> bool:
+		if __virus_consumed.value != null:
+			return true
+		return false
+	func get_virus_consumed() -> VirusConsumedMessage:
+		return __virus_consumed.value
+	func clear_virus_consumed() -> void:
+		data[23].state = PB_SERVICE_STATE.UNFILLED
+		__virus_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+	func new_virus_consumed() -> VirusConsumedMessage:
+		__chat.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		__id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[3].state = PB_SERVICE_STATE.UNFILLED
+		__login_request.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[4].state = PB_SERVICE_STATE.UNFILLED
+		__register_request.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[5].state = PB_SERVICE_STATE.UNFILLED
+		__ok_response.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[6].state = PB_SERVICE_STATE.UNFILLED
+		__deny_response.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[7].state = PB_SERVICE_STATE.UNFILLED
+		__player.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[8].state = PB_SERVICE_STATE.UNFILLED
+		__player_direction.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[9].state = PB_SERVICE_STATE.UNFILLED
+		__spore.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[10].state = PB_SERVICE_STATE.UNFILLED
+		__spore_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[11].state = PB_SERVICE_STATE.UNFILLED
+		__spores_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[12].state = PB_SERVICE_STATE.UNFILLED
+		__player_consumed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[13].state = PB_SERVICE_STATE.UNFILLED
+		__hiscore_board_request.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[14].state = PB_SERVICE_STATE.UNFILLED
+		__hiscore.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[15].state = PB_SERVICE_STATE.UNFILLED
+		__hiscore_board.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[16].state = PB_SERVICE_STATE.UNFILLED
+		__finished_browsing_hiscores.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[17].state = PB_SERVICE_STATE.UNFILLED
+		__search_hiscore.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[18].state = PB_SERVICE_STATE.UNFILLED
+		__disconnect.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[19].state = PB_SERVICE_STATE.UNFILLED
+		__feed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[20].state = PB_SERVICE_STATE.UNFILLED
+		__virus.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[21].state = PB_SERVICE_STATE.UNFILLED
+		__viruses_batch.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+		data[22].state = PB_SERVICE_STATE.UNFILLED
+		data[23].state = PB_SERVICE_STATE.FILLED
+		__virus_consumed.value = VirusConsumedMessage.new()
+		return __virus_consumed.value
 	
 	func _to_string() -> String:
 		return PBPacker.message_to_string(data)

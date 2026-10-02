@@ -20,6 +20,7 @@ var color: Color
 var is_player: bool
 var server_position: Vector2
 
+var _sent_direction := false
 var _target_zoom := 2.0 #when the game starts, we'll be zoomed in at x2
 var _furthest_zoom_allowed := _target_zoom
 
@@ -48,6 +49,9 @@ static func instantiate(actor_id: int, actor_name: String, x: float, y: float, r
 func _ready() -> void:
 	position.x = start_x
 	position.y = start_y
+	# Start the server position where the blob spawns. Left at (0, 0), every new blob
+	# slid towards the middle of the map until its first position update arrived.
+	server_position = position
 	velocity = Vector2.RIGHT * speed
 	radius = start_rad
 	
@@ -96,7 +100,12 @@ func _physics_process(delta: float) -> void:
 	#mouse pos. So we'll divide our circle(circle = 2*PI which is equal to TAU)
 	#into 15 parts, and the position will not change long as the player remains
 	#in one part
-	if abs(velocity.angle_to(input_vec)) > TAU / 15: #12 degrees
+	#Always send the first direction: the server only starts moving the player once it
+	#has one, and a mouse already within 12 degrees of the starting heading (right)
+	#never triggered a send, so the blob drifted off on screen while staying still
+	#on the server.
+	if abs(velocity.angle_to(input_vec)) > TAU / 15 or not _sent_direction: #12 degrees
+		_sent_direction = true
 		velocity = input_vec * speed
 		var packet := packets.Packet.new()
 		var player_direction_message := packet.new_player_direction()

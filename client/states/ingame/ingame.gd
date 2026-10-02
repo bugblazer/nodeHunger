@@ -5,6 +5,15 @@ const packets := preload("res://packets.gd")
 const Actor := preload("res://objects/actor/actor.gd")
 const Spore := preload("res://objects/spore/spore.gd")
 const MapBorder := preload("res://objects/map_border/map_border.gd")
+const Virus := preload("res://objects/virus/virus.gd")
+
+## Holding W throws mass this often (the server allows one throw per 90 ms).
+const FEED_REPEAT := 0.1
+## Must match feedMinRadius on the server: smaller blobs can't feed.
+const FEED_MIN_RADIUS := 35.0
+## How often to look again for spores the player is already touching but couldn't
+## eat when it first touched them (still flying, or its own burst spores).
+const RECHECK_SPORES_EVERY := 0.1
 
 @onready var _logout_button: Button = $UI/HUD/LogoutButton
 @onready var _line_edit: LineEdit = $UI/HUD/Chat/LineEdit
@@ -15,6 +24,9 @@ const MapBorder := preload("res://objects/map_border/map_border.gd")
 
 var _players: Dictionary[int, Actor]
 var _spores: Dictionary[int, Spore]
+var _viruses: Dictionary[int, Virus]
+var _feed_timer := 0.0
+var _recheck_timer := 0.0
 
 func _ready() -> void:
 	_world.add_child(MapBorder.new()) # drawn over the floor, under spores and players
@@ -25,6 +37,7 @@ func _ready() -> void:
 	_line_edit.text_submitted.connect(_on_line_edit_text_submitted)
 	_line_edit.gui_input.connect(_on_line_edit_gui_input)
 	_minimap.players = _players
+	_minimap.viruses = _viruses
 	_minimap.my_id = GameManager.client_id
 
 # Enter opens the chat box; Enter again sends (see _on_line_edit_text_submitted).
@@ -34,6 +47,34 @@ func _unhandled_input(event: InputEvent) -> void:
 	if is_enter and not _line_edit.has_focus():
 		_line_edit.grab_focus()
 		get_viewport().set_input_as_handled()
+
+func _process(delta: float) -> void:
+	if GameManager.client_id not in _players:
+		return
+	var player := _players[GameManager.client_id]
+	_process_feed(player, delta)
+
+	_recheck_timer -= delta
+	if _recheck_timer <= 0.0:
+		_recheck_timer = RECHECK_SPORES_EVERY
+		for area in player.get_overlapping_areas():
+			if area is Spore:
+				_consume_spore(area as Spore)
+
+# W throws a bit of mass towards the mouse; holding it keeps throwing.
+func _process_feed(player: Actor, delta: float) -> void:
+	var holding_w := Input.is_physical_key_pressed(KEY_W) and not _line_edit.has_focus()
+	if not holding_w or player.radius < FEED_MIN_RADIUS:
+		_feed_timer = 0.0 # so the next press throws straight away
+		return
+	_feed_timer -= delta
+	if _feed_timer > 0.0:
+		return
+	_feed_timer = FEED_REPEAT
+	var packet := packets.Packet.new()
+	var feed_msg := packet.new_feed()
+	feed_msg.set_direction((_world.get_global_mouse_position() - player.position).angle())
+	WS.send(packet)
 
 # Escape closes the chat box without sending.
 func _on_line_edit_gui_input(event: InputEvent) -> void:
@@ -133,6 +174,13 @@ func _on_ws_packet_received(packet: packets.Packet) -> void:
 		_handle_spores_batch_msg(sender_id, packet.get_spores_batch())
 	elif packet.has_spore_consumed():
 		_handle_spore_consumed_msg(sender_id, packet.get_spore_consumed())
+	elif packet.has_virus():
+		_handle_virus_msg(packet.get_virus())
+	elif packet.has_viruses_batch():
+		for virus_msg in packet.get_viruses_batch().get_viruses():
+			_handle_virus_msg(virus_msg)
+	elif packet.has_virus_consumed():
+		_handle_virus_consumed_msg(packet.get_virus_consumed())
 	elif packet.has_disconnect():
 		_handle_disconnect_msg(sender_id, packet.get_disconnect())
 
@@ -151,10 +199,20 @@ func _handle_spore_msg(sender_id: int, spore_msg: packets.SporeMessage) -> void:
 	
 	if spore_id not in _spores:
 		var spore := Spore.instantiate(spore_id, x, y, radius, underneath_player)
+		if spore_msg.get_ejected():
+			spore.ejected = true
+			spore.from_position = Vector2(spore_msg.get_from_x(), spore_msg.get_from_y())
+		var owner_id := spore_msg.get_owner_id()
+		if owner_id != 0:
+			spore.owner_id = owner_id
+			spore.lock_until_msec = Time.get_ticks_msec() + int(spore_msg.get_lock_seconds() * 1000.0)
+			# Thrown and burst mass keeps the colour of the blob it came from.
+			if owner_id in _players:
+				spore.color = _players[owner_id].color
 		_world.add_child(spore)
 		_spores[spore_id] =  spore
 
-func _handle_spores_batch_msg(sender_id: int, spores_batch_msg: packets.SporeBatchMessage) -> void:
+func _handle_spores_batch_msg(sender_id: int, spores_batch_msg: packets.SporesBatchMessage) -> void:
 	for spore_msg in spores_batch_msg.get_spores():
 		_handle_spore_msg(sender_id, spore_msg)
 
@@ -171,6 +229,22 @@ func _handle_spore_consumed_msg(sender_id: int, spore_consumed_msg: packets.Spor
 			
 			_set_actor_mass(actor, actor_mass + spore_mass)
 			_remove_spore(spore)
+
+func _handle_virus_msg(virus_msg: packets.VirusMessage) -> void:
+	var virus_id := virus_msg.get_id()
+	if virus_id in _viruses:
+		_viruses[virus_id].update_from_server(virus_msg.get_x(), virus_msg.get_y(), virus_msg.get_radius())
+	else:
+		var virus := Virus.instantiate(virus_id, virus_msg.get_x(), virus_msg.get_y(), virus_msg.get_radius())
+		_world.add_child(virus)
+		_viruses[virus_id] = virus
+
+# A virus burst a blob. The blob's new size and its spores arrive separately.
+func _handle_virus_consumed_msg(virus_consumed_msg: packets.VirusConsumedMessage) -> void:
+	var virus_id := virus_consumed_msg.get_virus_id()
+	if virus_id in _viruses:
+		_viruses[virus_id].queue_free()
+		_viruses.erase(virus_id)
 
 func _handle_disconnect_msg(sender_id: int, disconnect_msg: packets.DisconnectMessage) -> void:
 	if sender_id in _players:
@@ -190,10 +264,13 @@ func _on_player_area_entered(area: Area2D) -> void:
 
 func _set_actor_mass(actor: Actor, new_mass: float) -> void:
 	actor.radius = sqrt(new_mass / PI)
+	# Like Agar.io: blobs small enough to hide under a virus are drawn below it,
+	# blobs big enough to burst on one are drawn above it.
+	actor.z_index = 3 if actor.radius > Virus.RADIUS * Virus.POP_RATIO else 1
 	_hiscores.set_hiscore(actor.actor_name, roundi(new_mass))
 
 func _consume_spore(spore: Spore) -> void:
-	if spore.underneath_player:
+	if spore.spore_id not in _spores or not spore.can_be_eaten_by(GameManager.client_id):
 		return
 	
 	var packet := packets.Packet.new()

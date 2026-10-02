@@ -107,7 +107,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("ChatInputBox")
 theme_override_styles/focus = SubResource("ChatInputFocus")
-placeholder_text = "Press Enter to chat"
+placeholder_text = "Enter to chat  ·  W to feed"
 max_length = 120
 context_menu_enabled = false
 
