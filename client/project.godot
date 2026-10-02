@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="client"
+config/name="Node Hunger"
 run/main_scene="uid://c8gs4ledvyyor"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"

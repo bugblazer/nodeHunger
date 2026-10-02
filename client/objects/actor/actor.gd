@@ -4,6 +4,7 @@ const packets := preload("res://packets.gd")
 
 const Actor := preload("res://objects/actor/actor.gd")
 const Scene := preload("res://objects/actor/actor.tscn")
+const MapBorder := preload("res://objects/map_border/map_border.gd")
 
 @onready var _nameplate: Label = $Nameplate
 @onready var _camera: Camera2D = $Camera2D
@@ -70,6 +71,10 @@ func _physics_process(delta: float) -> void:
 	position += velocity * delta
 	server_position += velocity * delta
 	position += (server_position - position) * 0.05
+	# Stop at the map walls like the server does, so blobs slide along the wall
+	# instead of drifting past it and snapping back on the next server update.
+	position = MapBorder.clamp_to_map(position, radius)
+	server_position = MapBorder.clamp_to_map(server_position, radius)
 	#^ Multiplying by delta as it's the time passed since last frame refresh
 	#delta will be small if the game is not laggy, it'll be large if the game
 	#is laggy

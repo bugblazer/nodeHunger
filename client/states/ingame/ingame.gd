@@ -4,6 +4,7 @@ const packets := preload("res://packets.gd")
 
 const Actor := preload("res://objects/actor/actor.gd")
 const Spore := preload("res://objects/spore/spore.gd")
+const MapBorder := preload("res://objects/map_border/map_border.gd")
 
 @onready var _logout_button: Button = $UI/MarginContainer/VBoxContainer/HBoxContainer/LogoutButton
 @onready var _send_button: Button = $UI/MarginContainer/VBoxContainer/HBoxContainer/SendButton
@@ -16,6 +17,7 @@ var _players: Dictionary[int, Actor]
 var _spores: Dictionary[int, Spore]
 
 func _ready() -> void:
+	_world.add_child(MapBorder.new()) # drawn over the floor, under spores and players
 	WS.connection_closed.connect(_on_ws_connection_closed)
 	WS.packet_received.connect(_on_ws_packet_received)
 	

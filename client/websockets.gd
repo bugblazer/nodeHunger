@@ -9,7 +9,7 @@ signal connected_to_server()
 signal connection_closed()
 signal packet_received(packet: packets.Packet)
 
-func connect_to_url(url: String, tls_options: TLSOptions = null) -> int:
+func connect_to_url(url: String, tls_options: TLSOptions) -> int:
 	var err := socket.connect_to_url(url, tls_options)
 	if err != OK:
 		return err
