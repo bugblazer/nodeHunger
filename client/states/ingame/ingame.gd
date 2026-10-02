@@ -190,8 +190,11 @@ func _handle_spore_msg(sender_id: int, spore_msg: packets.SporeMessage) -> void:
 	var y := spore_msg.get_y()
 	var radius := spore_msg.get_radius()
 	
+	# Only a spore our own blob just dropped under itself waits until we move off it
+	# (the server would reject eating it straight back). Spores thrown or burst by
+	# anyone are edible as soon as they land, even if they land under us.
 	var underneath_player := false
-	if GameManager.client_id in _players:
+	if sender_id == GameManager.client_id and not spore_msg.get_ejected() and GameManager.client_id in _players:
 		var player := _players[GameManager.client_id]
 		var player_pos := Vector2(player.position.x, player.position.y)
 		var spore_pos := Vector2(x, y)
