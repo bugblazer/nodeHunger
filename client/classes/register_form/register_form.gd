@@ -1,12 +1,12 @@
 class_name RegisterForm
 extends VBoxContainer
 
-@onready var _username_field: LineEdit = $Username
-@onready var _password_field: LineEdit = $Password
-@onready var _confirm_password_field: LineEdit = $ConfirmPassword
-@onready var _confirm_button: Button = $HBoxContainer/ConfirmButton
-@onready var _cancel_button: Button = $HBoxContainer/CancelButton
-@onready var _color_wheel: ColorWheel = $ColorWheel
+@onready var _username_field: LineEdit = $Columns/Fields/Username
+@onready var _password_field: LineEdit = $Columns/Fields/Password
+@onready var _confirm_password_field: LineEdit = $Columns/Fields/ConfirmPassword
+@onready var _confirm_button: Button = $Columns/Fields/HBoxContainer/ConfirmButton
+@onready var _cancel_button: Button = $Columns/Fields/HBoxContainer/CancelButton
+@onready var _color_wheel: ColorWheel = $Columns/ColourColumn/ColorWheel
 
 
 signal form_submitted(username: String, password: String, confirm_password: String, color: Color)

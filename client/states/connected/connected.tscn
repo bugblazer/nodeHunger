@@ -9,6 +9,24 @@
 
 [ext_resource type="Script" path="res://classes/cover_background/cover_background.gd" id="cover_bg"]
 
+[ext_resource type="Script" path="res://classes/toast/toast.gd" id="toast_script"]
+
+[sub_resource type="StyleBoxFlat" id="ToastBox"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 0.72)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.12)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
 [node name="Connected" type="Node"]
 script = ExtResource("1_idi6s")
 
@@ -23,9 +41,9 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme = ExtResource("2_rp112")
-theme_override_constants/margin_left = 350
-theme_override_constants/margin_top = 50
-theme_override_constants/margin_right = 350
+theme_override_constants/margin_left = 150
+theme_override_constants/margin_top = 62
+theme_override_constants/margin_right = 150
 theme_override_constants/margin_bottom = 50
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer"]
@@ -47,13 +65,18 @@ fit_content = true
 visible = false
 layout_mode = 2
 
-[node name="Log" type="RichTextLabel" parent="UI/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 200)
-layout_mode = 2
-size_flags_vertical = 4
-script = ExtResource("2_kh2bm")
-message_lifetime = 5.0
-metadata/_custom_type_script = "uid://8qda8samenj8"
+[node name="Toast" type="PanelContainer" parent="UI"]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_top = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+mouse_filter = 2
+theme = ExtResource("2_rp112")
+theme_override_styles/panel = SubResource("ToastBox")
+script = ExtResource("toast_script")
 
 [node name="background_connected" type="Sprite2D" parent="."]
 texture_repeat = 2

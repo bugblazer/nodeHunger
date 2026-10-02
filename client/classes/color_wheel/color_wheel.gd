@@ -10,7 +10,7 @@ signal color_changed(color: Color)
 const MIN_SATURATION := 0.45
 const HUE_STEPS := 96          # segments around the ring
 const SATURATION_STEPS := 4    # rings from inner (paler) to outer (stronger)
-const RING_WIDTH := 46.0
+const RING_WIDTH := 34.0
 
 var hue := randf()
 var saturation := 0.85
@@ -21,7 +21,8 @@ var color: Color:
 var _dragging := false
 
 func _ready() -> void:
-	custom_minimum_size = Vector2(230, 230)
+	if custom_minimum_size == Vector2.ZERO:
+		custom_minimum_size = Vector2(200, 200)
 	focus_mode = Control.FOCUS_ALL
 	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	tooltip_text = "Pick your blob colour"

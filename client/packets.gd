@@ -951,7 +951,7 @@ class DenyResponseMessage:
 	func _init():
 		var service
 		
-		__reason = PBField.new("reason", PB_DATA_TYPE.STRING, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.STRING])
+		__reason = PBField.new("reason", PB_DATA_TYPE.STRING, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.STRING])
 		service = PBServiceField.new()
 		service.field = __reason
 		data[__reason.tag] = service

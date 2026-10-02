@@ -7,7 +7,7 @@ var _action_on_ok_received: Callable
 @onready var _login_form: LoginForm = $UI/MarginContainer/VBoxContainer/LoginForm
 @onready var _register_form: RegisterForm = $UI/MarginContainer/VBoxContainer/RegisterForm
 @onready var _register_prompt: RichTextLabel = $UI/MarginContainer/VBoxContainer/RegisterPrompt
-@onready var _log: Log = $UI/MarginContainer/VBoxContainer/Log
+@onready var _log: Toast = $UI/Toast # messages show as a toast at the top of the screen
 
 #Establishing connections:
 func _ready() -> void:

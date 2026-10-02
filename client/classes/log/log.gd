@@ -30,13 +30,17 @@ func _process(_delta: float) -> void:
 
 func _render() -> void:
 	clear()
-	for e in _entries:
-		append_text(e[0] + "\n")
+	for i in _entries.size():
+		append_text(_entries[i][0] + ("\n" if i < _entries.size() - 1 else ""))
+	# Timed logs only show while they have messages.
+	visible = not _entries.is_empty()
 
 ## Removes every message now (e.g. when switching between login and sign-up).
 func clear_messages() -> void:
 	_entries.clear()
 	clear()
+	if message_lifetime > 0.0:
+		visible = false
 
 func info(message: String) -> void:
 	_message(message, Color.WHITE)

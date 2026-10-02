@@ -22,7 +22,7 @@ message OkResponseMessage {
   //Leaving empty, since no message is needed in this case
 }
 message DenyResponseMessage {
-  string reason = 2;
+  string reason = 1;
 }
 message PlayerMessage {
   uint64 id = 1;

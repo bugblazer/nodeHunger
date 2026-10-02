@@ -11,41 +11,55 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_1f7y0")
 
-[node name="Username" type="LineEdit" parent="."]
+[node name="Columns" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 28
+
+[node name="Fields" type="VBoxContainer" parent="Columns"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="Username" type="LineEdit" parent="Columns/Fields"]
 layout_mode = 2
 placeholder_text = "Username"
 
-[node name="Password" type="LineEdit" parent="."]
+[node name="Password" type="LineEdit" parent="Columns/Fields"]
 layout_mode = 2
 placeholder_text = "Password"
 virtual_keyboard_type = 6
 secret = true
 
-[node name="ConfirmPassword" type="LineEdit" parent="."]
+[node name="ConfirmPassword" type="LineEdit" parent="Columns/Fields"]
 layout_mode = 2
 placeholder_text = "Confirm password"
 virtual_keyboard_type = 6
 secret = true
 
-[node name="ColorLabel" type="Label" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="Columns/Fields"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="ConfirmButton" type="Button" parent="Columns/Fields/HBoxContainer"]
+layout_mode = 2
+text = "Confirm"
+
+[node name="CancelButton" type="Button" parent="Columns/Fields/HBoxContainer"]
+layout_mode = 2
+text = "Back"
+
+[node name="ColourColumn" type="VBoxContainer" parent="Columns"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="ColorLabel" type="Label" parent="Columns/ColourColumn"]
 layout_mode = 2
 text = "Pick your colour"
 horizontal_alignment = 1
 
-[node name="ColorWheel" type="Control" parent="."]
-custom_minimum_size = Vector2(230, 230)
+[node name="ColorWheel" type="Control" parent="Columns/ColourColumn"]
+custom_minimum_size = Vector2(170, 170)
 layout_mode = 2
 size_flags_horizontal = 4
 script = ExtResource("2_wheel")
-
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 2
-size_flags_horizontal = 4
-
-[node name="ConfirmButton" type="Button" parent="HBoxContainer"]
-layout_mode = 2
-text = "Confirm"
-
-[node name="CancelButton" type="Button" parent="HBoxContainer"]
-layout_mode = 2
-text = "Back"

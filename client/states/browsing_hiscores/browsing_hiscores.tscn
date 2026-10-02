@@ -54,6 +54,7 @@ layout_mode = 2
 bbcode_enabled = true
 text = "[center][/center]"
 script = ExtResource("3_jq3og")
+message_lifetime = 5.0
 metadata/_custom_type_script = "uid://8qda8samenj8"
 
 [node name="background_hiscores" type="Sprite2D" parent="."]
