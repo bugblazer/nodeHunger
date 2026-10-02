@@ -6,11 +6,11 @@ const Actor := preload("res://objects/actor/actor.gd")
 const Spore := preload("res://objects/spore/spore.gd")
 const MapBorder := preload("res://objects/map_border/map_border.gd")
 
-@onready var _logout_button: Button = $UI/MarginContainer/VBoxContainer/HBoxContainer/LogoutButton
-@onready var _send_button: Button = $UI/MarginContainer/VBoxContainer/HBoxContainer/SendButton
-@onready var _line_edit: LineEdit = $UI/MarginContainer/VBoxContainer/HBoxContainer/LineEdit
-@onready var _log: Log = $UI/MarginContainer/VBoxContainer/Log
-@onready var _hiscores: Hiscores = $UI/MarginContainer/VBoxContainer/Hiscores
+@onready var _logout_button: Button = $UI/HUD/LogoutButton
+@onready var _line_edit: LineEdit = $UI/HUD/Chat/LineEdit
+@onready var _log: Log = $UI/HUD/Chat/Log
+@onready var _hiscores: Hiscores = $UI/HUD/Hiscores
+@onready var _minimap: Minimap = $UI/HUD/Minimap
 @onready var _world: Node2D = $World
 
 var _players: Dictionary[int, Actor]
@@ -21,9 +21,26 @@ func _ready() -> void:
 	WS.connection_closed.connect(_on_ws_connection_closed)
 	WS.packet_received.connect(_on_ws_packet_received)
 	
-	_send_button.pressed.connect(_on_send_button_pressed)
 	_logout_button.pressed.connect(_on_logout_button_pressed)
 	_line_edit.text_submitted.connect(_on_line_edit_text_submitted)
+	_line_edit.gui_input.connect(_on_line_edit_gui_input)
+	_minimap.players = _players
+	_minimap.my_id = GameManager.client_id
+
+# Enter opens the chat box; Enter again sends (see _on_line_edit_text_submitted).
+func _unhandled_input(event: InputEvent) -> void:
+	var is_enter: bool = event is InputEventKey and event.pressed and not event.echo \
+		and event.keycode in [KEY_ENTER, KEY_KP_ENTER]
+	if is_enter and not _line_edit.has_focus():
+		_line_edit.grab_focus()
+		get_viewport().set_input_as_handled()
+
+# Escape closes the chat box without sending.
+func _on_line_edit_gui_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		_line_edit.clear()
+		_line_edit.release_focus()
+		_line_edit.accept_event()
 
 func _handle_chat_msg(sender_id: int, chat_msg: packets.ChatMessage) -> void:
 	if sender_id in _players:
@@ -47,7 +64,7 @@ func _handle_player_msg(sender_id: int, player_msg: packets.PlayerMessage) -> vo
 
 	else:
 		var direction := player_msg.get_direction()
-		_update_actor(actor_id, x, y, direction, speed, radius, is_player)
+		_update_actor(actor_id, x, y, direction, speed, radius, color, is_player)
 
 
 func _add_actor(actor_id: int, actor_name: String, x: float, y: float, radius: float, speed: float, color: Color, is_player: bool) -> void:
@@ -60,9 +77,13 @@ func _add_actor(actor_id: int, actor_name: String, x: float, y: float, radius: f
 	if is_player:
 		actor.area_entered.connect(_on_player_area_entered)
 
-func _update_actor(actor_id: int, x: float, y: float, direction: float, speed: float, radius: float, is_player: bool) -> void:
+func _update_actor(actor_id: int, x: float, y: float, direction: float, speed: float, radius: float, color: Color, is_player: bool) -> void:
 	var actor := _players[actor_id]
-	
+
+	# Pick up colour changes too (e.g. a blob that arrived before its colour was set).
+	if actor.color != color:
+		actor.color = color
+		actor.queue_redraw()
 	_set_actor_mass(actor, _rad_to_mass(radius))
 	#Updating the player coords only if server and client coords 
 	#are more than 100px apart
@@ -81,6 +102,11 @@ func _on_logout_button_pressed() -> void:
 	GameManager.set_state(GameManager.State.CONNECTED)
 
 func _on_line_edit_text_submitted(new_text) -> void:
+	# Enter sends and closes the chat box, so the keyboard goes back to the game.
+	_line_edit.release_focus()
+	if new_text.strip_edges().is_empty():
+		_line_edit.clear()
+		return
 	var packet := packets.Packet.new()
 	var chat_msg := packet.new_chat()
 	chat_msg.set_msg(new_text)
@@ -91,9 +117,6 @@ func _on_line_edit_text_submitted(new_text) -> void:
 	else:
 		_log.chat("You", new_text)
 	_line_edit.clear()
-
-func _on_send_button_pressed() -> void:
-	_on_line_edit_text_submitted(_line_edit.text)
 
 func _on_ws_connection_closed() -> void:
 	_log.warning("Connection closed")

@@ -14,6 +14,10 @@ config/name="Node Hunger"
 run/main_scene="uid://c8gs4ledvyyor"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0.08, 0.08, 0.09, 1)
+boot_splash/image="res://resources/boot_splash.png"
+boot_splash/fullsize=true
+boot_splash/use_filter=true
 
 [autoload]
 
