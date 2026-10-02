@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dlyhapb1jpg0h"]
+[gd_scene load_steps=8 format=3 uid="uid://dlyhapb1jpg0h"]
 
 [ext_resource type="Script" uid="uid://dn0nm3h0o56fa" path="res://states/connected/connected.gd" id="1_idi6s"]
 [ext_resource type="Script" uid="uid://8qda8samenj8" path="res://classes/log/log.gd" id="2_kh2bm"]
@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://bt2fnmor3rgtg" path="res://classes/login_form/login_form.tscn" id="2_x7iwh"]
 [ext_resource type="Texture2D" uid="uid://bx4gjuvqfg4ew" path="res://resources/ui_bg az.png" id="3_kh2bm"]
 [ext_resource type="PackedScene" uid="uid://chbcdqs1r153b" path="res://classes/register_form/register_form.tscn" id="3_tk3qr"]
+
+[ext_resource type="Script" path="res://classes/cover_background/cover_background.gd" id="cover_bg"]
 
 [node name="Connected" type="Node"]
 script = ExtResource("1_idi6s")
@@ -59,3 +61,4 @@ texture = ExtResource("3_kh2bm")
 centered = false
 region_enabled = true
 region_rect = Rect2(0, 0, 1152, 648)
+script = ExtResource("cover_bg")

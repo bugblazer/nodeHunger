@@ -53,7 +53,11 @@ func _ready() -> void:
 	
 	_collision_shape.radius = radius
 	_nameplate.text = actor_name
-	
+	# The scene's LabelSettings resource is shared by every blob, and it overrides
+	# theme font sizes. Give each blob its own copy so its name can grow with it.
+	_nameplate.label_settings = _nameplate.label_settings.duplicate()
+	_update_nameplate()
+
 func _process(delta: float) -> void:
 	if not is_equal_approx(_camera.zoom.x, _target_zoom):
 		_camera.zoom -= Vector2(1,1) * (_camera.zoom.x - _target_zoom) * 0.05
@@ -101,8 +105,8 @@ func _physics_process(delta: float) -> void:
 
 func _update_zoom() -> void:
 	if is_node_ready():
-		_nameplate.add_theme_font_size_override("font_size", max(16, radius / 2))
-	
+		_update_nameplate()
+
 	if not is_player:
 		return
 	
@@ -114,3 +118,10 @@ func _update_zoom() -> void:
 #drawing the player blob
 func _draw() -> void:
 	draw_circle(Vector2.ZERO, _collision_shape.radius, color)
+
+## The name grows with the blob: half the radius, never smaller than 16. The
+## outline grows too, so big names stay readable over other blobs.
+func _update_nameplate() -> void:
+	var settings := _nameplate.label_settings
+	settings.font_size = int(max(16.0, radius / 2.0))
+	settings.outline_size = int(max(4.0, settings.font_size / 6.0))
