@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://chbcdqs1r153b"]
+[gd_scene load_steps=3 format=3 uid="uid://chbcdqs1r153b"]
 
 [ext_resource type="Script" uid="uid://derjqvuy4u3he" path="res://classes/register_form/register_form.gd" id="1_1f7y0"]
+[ext_resource type="Script" path="res://classes/color_wheel/color_wheel.gd" id="2_wheel"]
 
 [node name="RegisterForm" type="VBoxContainer"]
 anchors_preset = 15
@@ -26,15 +27,16 @@ placeholder_text = "Confirm password"
 virtual_keyboard_type = 6
 secret = true
 
-[node name="ColorPicker" type="ColorPicker" parent="."]
+[node name="ColorLabel" type="Label" parent="."]
+layout_mode = 2
+text = "Pick your colour"
+horizontal_alignment = 1
+
+[node name="ColorWheel" type="Control" parent="."]
+custom_minimum_size = Vector2(230, 230)
 layout_mode = 2
 size_flags_horizontal = 4
-picker_shape = 2
-sampler_visible = false
-color_modes_visible = false
-sliders_visible = false
-hex_visible = false
-presets_visible = false
+script = ExtResource("2_wheel")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2

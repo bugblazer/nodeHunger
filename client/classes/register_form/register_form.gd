@@ -6,7 +6,7 @@ extends VBoxContainer
 @onready var _confirm_password_field: LineEdit = $ConfirmPassword
 @onready var _confirm_button: Button = $HBoxContainer/ConfirmButton
 @onready var _cancel_button: Button = $HBoxContainer/CancelButton
-@onready var _color_picker: ColorPicker = $ColorPicker
+@onready var _color_wheel: ColorWheel = $ColorWheel
 
 
 signal form_submitted(username: String, password: String, confirm_password: String, color: Color)
@@ -17,7 +17,7 @@ func _ready() -> void:
 	_cancel_button.pressed.connect(_on_cancel_button_pressed)
 
 func _on_confirm_button_pressed() -> void:
-	form_submitted.emit(_username_field.text, _password_field.text, _confirm_password_field.text, _color_picker.color)
+	form_submitted.emit(_username_field.text, _password_field.text, _confirm_password_field.text, _color_wheel.color)
 
 func _on_cancel_button_pressed() -> void:
 	form_cancelled.emit()

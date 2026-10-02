@@ -52,15 +52,21 @@ func _on_register_form_submitted(username: String, password: String, confirm_pas
 	register_request_msg.set_password(password)
 	register_request_msg.set_color(color.to_rgba32())
 	WS.send(packet)
-	_action_on_ok_received = func(): _log.success("Registeration successful!")
+	_action_on_ok_received = func():
+		# Back to the login form with the new username filled in.
+		_on_register_form_cancelled()
+		_login_form.prefill(username)
+		_log.success("Account created! Enter your password to play.")
 
 func _on_register_form_cancelled() -> void:
+	_log.clear_messages()
 	_register_form.hide()
 	_login_form.show()
 	_register_prompt.show()
 
 func _on_register_prompt_meta_clicked(meta) -> void:
 	if meta is String and meta == "register":
+		_log.clear_messages()
 		_login_form.hide()
 		_register_form.show()
 		_register_prompt.hide()

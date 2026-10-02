@@ -17,4 +17,9 @@ func _on_login_button_pressed() -> void:
 
 func _on_hiscores_button_pressed() -> void:
 	GameManager.set_state(GameManager.State.BROWSING_HISCORES)
-	
+
+## Fills in the username (after creating an account) and moves focus to the password.
+func prefill(username: String) -> void:
+	_username_field.text = username
+	_password_field.text = ""
+	_password_field.grab_focus()

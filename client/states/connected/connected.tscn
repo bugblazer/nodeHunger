@@ -50,6 +50,7 @@ custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_vertical = 4
 script = ExtResource("2_kh2bm")
+message_lifetime = 5.0
 metadata/_custom_type_script = "uid://8qda8samenj8"
 
 [node name="background_connected" type="Sprite2D" parent="."]
