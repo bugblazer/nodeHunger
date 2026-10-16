@@ -1,12 +1,28 @@
-[gd_scene load_steps=7 format=3 uid="uid://4dixftth84gm"]
+[gd_scene load_steps=8 format=3 uid="uid://4dixftth84gm"]
 
 [ext_resource type="Script" uid="uid://belgmahuq01p4" path="res://states/browsing_hiscores/browsing_hiscores.gd" id="1_0a663"]
 [ext_resource type="Theme" uid="uid://bescrmgmffkug" path="res://resources/game_theme.tres" id="2_extph"]
 [ext_resource type="PackedScene" uid="uid://ctwq660v0npav" path="res://classes/hiscores/hiscores.tscn" id="2_gr358"]
-[ext_resource type="Script" uid="uid://8qda8samenj8" path="res://classes/log/log.gd" id="3_jq3og"]
+[ext_resource type="Script" path="res://classes/toast/toast.gd" id="toast_script"]
 [ext_resource type="Texture2D" uid="uid://bqf06g8ji7ppq" path="res://resources/ui_bg(highscore) re.png" id="4_o6vvw"]
 
 [ext_resource type="Script" path="res://classes/cover_background/cover_background.gd" id="cover_bg"]
+
+[sub_resource type="StyleBoxFlat" id="ToastBox"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 0.72)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.12)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
 [node name="BrowsingHiscores" type="Node"]
 script = ExtResource("1_0a663")
@@ -48,14 +64,18 @@ text = "Search"
 custom_minimum_size = Vector2(400, 400)
 layout_mode = 2
 
-[node name="Log" type="RichTextLabel" parent="UI/VBoxContainer"]
-custom_minimum_size = Vector2(0, 90)
-layout_mode = 2
-bbcode_enabled = true
-text = "[center][/center]"
-script = ExtResource("3_jq3og")
-message_lifetime = 5.0
-metadata/_custom_type_script = "uid://8qda8samenj8"
+[node name="Toast" type="PanelContainer" parent="UI"]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_top = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+mouse_filter = 2
+theme = ExtResource("2_extph")
+theme_override_styles/panel = SubResource("ToastBox")
+script = ExtResource("toast_script")
 
 [node name="background_hiscores" type="Sprite2D" parent="."]
 texture_repeat = 2

@@ -7,6 +7,8 @@ var _action_on_ok_received: Callable
 @onready var _login_form: LoginForm = $UI/MarginContainer/VBoxContainer/LoginForm
 @onready var _register_form: RegisterForm = $UI/MarginContainer/VBoxContainer/RegisterForm
 @onready var _register_prompt: RichTextLabel = $UI/MarginContainer/VBoxContainer/RegisterPrompt
+const MIN_PASSWORD_LENGTH := 6
+
 @onready var _log: Toast = $UI/Toast # messages show as a toast at the top of the screen
 
 #Establishing connections:
@@ -42,6 +44,10 @@ func _on_login_form_submitted(username: String, password: String) -> void:
 	
 #Registeration form functionality
 func _on_register_form_submitted(username: String, password: String, confirm_password: String, color: Color) -> void:
+	# Same rule as the server (minPasswordLength in connected.go); checked here too so the message is instant.
+	if password.length() < MIN_PASSWORD_LENGTH:
+		_log.error("Password must be at least %d characters" % MIN_PASSWORD_LENGTH)
+		return
 	if password != confirm_password:
 		_log.error("Passwords do not match!")
 		return

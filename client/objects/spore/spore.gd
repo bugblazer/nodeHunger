@@ -19,6 +19,8 @@ var underneath_player : bool
 ## Thrown with W or burst out of a blob by a virus: it flies out from from_position.
 var ejected := false
 var from_position: Vector2
+## Removes itself once it lands: a throw that a virus swallowed (never a real spore).
+var vanish_on_landing := false
 ## The blob it came from can't eat it back until lock_until_msec (Time.get_ticks_msec).
 var owner_id := 0
 var lock_until_msec := 0
@@ -51,7 +53,12 @@ func _ready() -> void:
 		position = from_position
 		var tween := create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		tween.tween_property(self, "position", Vector2(x, y), FLIGHT_TIME)
-		tween.tween_callback(func(): _flying = false)
+		tween.tween_callback(_on_landed)
+
+func _on_landed() -> void:
+	_flying = false
+	if vanish_on_landing:
+		queue_free()
 
 ## Whether the blob with this id may eat this spore right now.
 func can_be_eaten_by(actor_id: int) -> bool:

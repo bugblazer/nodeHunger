@@ -190,6 +190,19 @@ func _handle_spore_msg(sender_id: int, spore_msg: packets.SporeMessage) -> void:
 	var y := spore_msg.get_y()
 	var radius := spore_msg.get_radius()
 	
+	# Id 0 is never a real spore: it's a throw that flew into a virus (the virus took the
+	# mass). Show it flying there, then it removes itself; it's never stored or eaten.
+	if spore_id == 0:
+		var shown := Spore.instantiate(0, x, y, radius, false)
+		shown.ejected = true
+		shown.vanish_on_landing = true
+		shown.from_position = Vector2(spore_msg.get_from_x(), spore_msg.get_from_y())
+		var thrower_id := spore_msg.get_owner_id()
+		if thrower_id in _players:
+			shown.color = _players[thrower_id].color
+		_world.add_child(shown)
+		return
+	
 	# Only a spore our own blob just dropped under itself waits until we move off it
 	# (the server would reject eating it straight back). Spores thrown or burst by
 	# anyone are edible as soon as they land, even if they land under us.

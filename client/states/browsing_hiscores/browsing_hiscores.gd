@@ -6,11 +6,12 @@ const packets := preload("res://packets.gd")
 @onready var _line_edit: LineEdit = $UI/VBoxContainer/HBoxContainer/LineEdit
 @onready var _search_button: Button = $UI/VBoxContainer/HBoxContainer/SearchButton
 @onready var _hiscores: Hiscores = $UI/VBoxContainer/Hiscores
-@onready var _log: Log = $UI/VBoxContainer/Log
+@onready var _log: Toast = $UI/Toast # messages show as a toast at the top of the screen, like on the login screen
 
 func _ready() -> void:
 	_back_button.pressed.connect(_on_back_button_pressed)
-	_line_edit.text_submitted.connect(_on_search_button_pressed)
+	# Enter in the search box searches too (text_submitted passes the text, which we don't need).
+	_line_edit.text_submitted.connect(func(_text: String): _on_search_button_pressed())
 	_search_button.pressed.connect(_on_search_button_pressed)
 	
 	WS.packet_received.connect(_on_ws_packet_recieved)
